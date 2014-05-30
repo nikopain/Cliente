@@ -6,27 +6,38 @@
 
 package client;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 /**
  *
  * @author niko
  */
 public class Client {
-
-    
-    public static class Clientes extends Thread{
-        private Socket cliente=null;
-        private PrintWriter os=null;
-        private String nombre;
-        private String dirIp;
-        private String puerto;
-        public Clientes(Socket cl) {
-            cliente=cl;
-        }
-        public void run (){
+    public static int port = 4000;
+    public static void main(String[] args) throws IOException { 
+            String sentence;   
+            String modifiedSentence;   
+            DataOutputStream outToServer=null;
+            BufferedReader inFromServer=null;
+            BufferedReader inFromUser =null;
+            Socket clientSocket = new Socket("localhost", port);   
+            while (true){
+                inFromUser = new BufferedReader( new InputStreamReader(System.in)); 
+                outToServer = new DataOutputStream(clientSocket.getOutputStream());   
+                inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));   
+                sentence = inFromUser.readLine(); 
+                outToServer.writeBytes(sentence + '\n');   
+                modifiedSentence = inFromServer.readLine();   
+                System.out.println("FROM SERVER: " + modifiedSentence);  
+            }
             
-        }
     }
+    
 }
