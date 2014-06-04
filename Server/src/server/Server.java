@@ -14,6 +14,7 @@ public class Server {
      * @param args the command line arguments
      */
     private static int port= 4000;
+    public static int i =0;
     public static void main(String[] args) throws IOException {
         try{
             ServerSocket skts = new ServerSocket(port);
@@ -34,6 +35,9 @@ public class Server {
         private String nombre;
         private String dirIp;
         private String puerto;
+        private String user;
+        private String ip;
+        private String mensaje;
         public Clientes(Socket cl) {
             cliente=cl;
         }
@@ -42,16 +46,20 @@ public class Server {
                 BufferedReader in=new BufferedReader(new InputStreamReader(cliente.getInputStream()));
                 os = new PrintWriter(new OutputStreamWriter(cliente.getOutputStream(),"8859_1"),true);
                 String ruta= "";//Se guarda la cadena de la peticion para luego procesarla y obtener la url
-                int i =0;
                 String next;
+                String pag;
                 ruta=in.readLine();
                         StringTokenizer st = new StringTokenizer(ruta);
                         next= st.nextToken();
-                        if ((st.countTokens() >= 2) && next.equals("GET")) 
+                        pag= st.nextToken();
+                        //System.out.println("pag ="+pag);
+                        //System.out.println("next="+next);
+                        if ((st.countTokens() >= 1) && next.equals("GET")) 
                         {
-                            retornaFichero(st.nextToken()) ;
+                            retornaFichero(pag) ;
                         }
-                        else if((st.countTokens()>=2)&&next.equals("POST")){
+                        else if((st.countTokens()>=1)&&next.equals("POST")&& (pag.equals("/menu.html")||pag.equals("/pag1.html")||pag.equals("/pag2.html"))){
+                            //System.out.println("entra al post");
                             String currentLine =null;
                             do{
                                 currentLine = in.readLine();                          
@@ -73,12 +81,58 @@ public class Server {
                                     }
                                 }
                             }while(in.ready());
-                            next= st.nextToken();
-                            if(next.equals("/pag1.html")||next.equals("/pag2.html")){
-                                retornaFichero(next);
+                            //next= st.nextToken();
+                            if(pag.equals("/pag1.html")||pag.equals("/pag2.html")){
+                                retornaFichero(pag);
                             }
-                            else if(next.equals("/menu.html")){
-                                imprimirFichero(next,nombre,dirIp,puerto);
+                            else if(pag.equals("/menu.html")){
+                                imprimirFichero(pag,nombre,dirIp,puerto);
+                            }
+                        }
+                        else if((st.countTokens()>=1)&&next.equals("POST")&&pag.equals("/chat.html")){
+                            if (i==0){
+                                retornaFichero(pag);
+                                i=1;
+                            }
+                            else if(i==1){
+                                retornaFichero(pag);
+                                String cline=null;
+                                try{
+                                    while(true){
+                                        cline=in.readLine();
+                                        if((cline.indexOf("Content-Disposition:")) != -1){
+                                            if(cline.indexOf("user")!= -1){//REVISA SI TIENE EL NAME=NOMBRE PUESTO EN EL FORM DEL HTML
+                                            cline= in.readLine();//PARA SALTAR INFO INNECESARIA
+                                            cline= in.readLine();//PARA SALTAR INFO INNECESARIA
+                                            user=cline;
+                                            }
+                                            else if(cline.indexOf("ip")!= -1){//REVISA SI TIENE EL NAME=DIRIP PUESTO EN EL FORM DEL HTML
+                                                cline= in.readLine();//PARA SALTAR INFO INNECESARIA
+                                            cline= in.readLine();//PARA SALTAR INFO INNECESARIA
+                                            ip=cline;
+                                            }
+                                            else if(cline.indexOf("msje")!= -1){//REVISA SI TIENE EL NAME=PUERTO PUESTO EN EL FORM DEL HTML
+                                            cline= in.readLine();//PARA SALTAR INFO INNECESARIA
+                                            cline= in.readLine();//PARA SALTAR INFO INNECESARIA
+                                            mensaje=cline;
+                                            }
+                                        }
+                                    }
+                                }catch(Exception e){
+                                    
+                                }
+                                //System.out.println(user);
+                                //System.out.println(ip);
+                                //System.out.println(mensaje);
+                                try{
+                                    Socket scliente = new Socket("localhost",5000);
+                                    DataOutputStream salida = new DataOutputStream(scliente.getOutputStream());
+                                    salida.writeBytes("enviar" + " " + user + " " + ip + " " + mensaje + '\n');
+                                    scliente.close();
+                                }
+                                catch(Exception e){
+                                    e.printStackTrace();
+                                }
                             }
                         }
                         else 
@@ -94,8 +148,6 @@ public class Server {
         }
         void retornaFichero(String sfichero)
 	{
-            // comprobamos si tiene una barra al principio
-            String opciones;
             if (sfichero.startsWith("/"))
             {
                     sfichero = sfichero.substring(1) ;
@@ -117,13 +169,9 @@ public class Server {
                         BufferedReader fLocal= new BufferedReader(new FileReader(cont));
                         String lin="";
                         String comienzo="<html>\n" +
-"    <head>\n" +
-"        <title></title>\n" +
-"        <meta charset=\"UTF-8\">\n" +
-"        <meta name=\"viewport\" content=\"width=device-width\">\n" +
-"    </head>\n" +
 "    <body>\n" +
 "        <div>\n"+
+                                "<h2>Contactos Agregados</h2>"+
 "           <select name=\"contactos\" multiple=\"multiple\">";
                        while((lin=fLocal.readLine())!=null){
                             s= new StringTokenizer(lin);
@@ -131,7 +179,6 @@ public class Server {
                             
                         }
                         String fin= "</select>\n" +
-"        <textarea rows=\"5\" cols=\"50\"></textarea>    \n" +
 "        </div>\n" +
 "        <form method=\"POST\" action=\"pag1.html\">\n" +
 "            <input type=\"submit\" value=\"Agregar Contacto\">\n" +
