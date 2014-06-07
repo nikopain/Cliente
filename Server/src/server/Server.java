@@ -168,23 +168,39 @@ public class Server {
                         StringTokenizer s;
                         BufferedReader fLocal= new BufferedReader(new FileReader(cont));
                         String lin="";
-                        String comienzo="<html>\n" +
-"    <body>\n" +
-"        <div>\n"+
-                                "<h2>Contactos Agregados</h2>"+
-"           <select name=\"contactos\" multiple=\"multiple\">";
-                       while((lin=fLocal.readLine())!=null){
-                            s= new StringTokenizer(lin);
-                            contactos= contactos+"<option>"+ s.nextToken()+"</option>\n";
-                            
-                        }
-                        String fin= "</select>\n" +
-"        </div>\n" +
-"        <form method=\"POST\" action=\"pag1.html\">\n" +
-"            <input type=\"submit\" value=\"Agregar Contacto\">\n" +
-"        </form>\n" +
-"    </body>\n" +
-"</html>";
+                                              String comienzo="<html>\n" 
+                        + " <head>\n" 
+                            +"  <title>Mostar Datos</title>\n" 
+                            +"  <meta charset=\"UTF-8\">\n" 
+                            +"  <meta name=\"viewport\" content=\"width=device-width\">\n" 
+                        +"  </head>\n" 
+                        
+                        + "    <body BACKGROUND=\"C:\\Users\\Ivan\\Documents\\GitHub\\Cliente\\Server\\redes.jpg\">         "
+                            +"<center><h1>Avion de Papel</h1><h2>Mostrar Datos</h2></center>"     
+                            +"<form method=\"POST\" action=\"insertar.html\">\n" 
+                                +"<center> <table>"
+                                + "<table>"
+                                + "<tr>"
+                                + "<td><center>Nombre</center></td><td><center>Mensaje</center></td>"
+                                + "<tr>"
+                                    +"<td>"
+                                    + "<center><select name=\"contactos\" multiple=\"multiple\">";
+                                            while((lin=fLocal.readLine())!=null){
+                                                s= new StringTokenizer(lin);
+                                                contactos= contactos+"<option>"+ s.nextToken()+"</option>\n";
+                                                }
+                                            String fin= "</select>\n </center>"
+                                    + "</td>"
+                                    + "<td>"
+                                    + "     <textarea rows=\"4\" cols=\"50\"></textarea>    \n" 
+                                    + "</td>"
+                                + "</tr>"
+                                + "<tr>"
+                                    + "<td><input type=\"submit\" value=\"Agregar Contacto\">\n</td>" 
+                                + "</tr>"
+                            +   "</form>\n" 
+                        +   "</body>\n" 
+                    +   "</html>";
                         os.println(comienzo+contactos+fin);
                         fLocal.close();
                         os.close();

@@ -6,18 +6,32 @@ and open the template in the editor.
 -->
 <html>
     <head>
-        <title></title>
+        <title>Avion de Papel</title>
         <meta charset="UTF-8">
         <meta name="viewport" enctype="multipart/form-data" content="width=device-width">
     </head>
-    <body>
+    <body BACKGROUND="redes.jpg">         
         <div></div>
+        <center><h1>Avion de Papel</h1></center>
         <form  method="POST" enctype="multipart/form-data" action="menu.html">
-            <p><b>Agregar Contactos</b></p><br>
-            <p>Nombre <input type="text" name="nombre" required><br>
-            Direccion IP <input type="text" name="dirip" required><br>
-            Puerto <input type="text" name="puerto" required><br>
-            <input type="submit" name="save" value="Guardar">        </p>  
+               <center> 
+                    <table>                        
+                            <tr>
+                            <td>Nombre: </td> <td><input type="text" name="nombre" placeholder="Ingrese Nombre" required="true" /> </td>
+                            </tr>
+
+                            <tr> 
+                            <td>Direccion IP: </td> <td><input type="number" name="ipDir" placeholder="Ingrese Direccion IP" required="true"/></td>
+                            </tr>
+                            <tr> 
+
+                            <td>Puerto: </td> <td><input type="number" name="puerto" placeholder="Ingrese Puerto" required="true"/></td>
+                            </tr>
+
+                    </table>    
+                <br><br><br><input type="submit" value="Guardars" name="B1" /> </center>
+            </form>
+
                         
         </form>
     </body>
