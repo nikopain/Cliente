@@ -1,3 +1,3 @@
 Errores,
 
-1) Problemas con archivo contactos, debe contener almenos un usuario para el correcto funcionamiento.
+1) Los mensajes del chat se pide hacerlos con un '_' o sin espacios, debido a que usa la función StringTokenizer
