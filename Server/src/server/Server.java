@@ -38,6 +38,7 @@ public class Server {
         private String user;
         private String ip;
         private String mensaje;
+        private String path;
         public Clientes(Socket cl) {
             cliente=cl;
         }
@@ -102,23 +103,36 @@ public class Server {
                         try{
                             while(true){
                                 cline=in.readLine();
+                                System.out.println(cline);
                                 if((cline.indexOf("Content-Disposition:")) != -1){
-                                    if(cline.indexOf("user")!= -1){//REVISA SI TIENE EL NAME=NOMBRE PUESTO EN EL FORM DEL HTML
-                                    cline= in.readLine();//PARA SALTAR INFO INNECESARIA
-                                    cline= in.readLine();//PARA SALTAR INFO INNECESARIA
-                                    user=cline;
+                                    if(cline.indexOf("user")!= -1){
+                                        cline= in.readLine();
+                                        cline= in.readLine();
+                                        user=cline;
                                     }
-                                    else if(cline.indexOf("ip")!= -1){//REVISA SI TIENE EL NAME=DIRIP PUESTO EN EL FORM DEL HTML
+                                    else if(cline.indexOf("ip")!= -1){
+                                        cline= in.readLine();
+                                        cline= in.readLine();
+                                        ip=cline;
+                                    }
+                                    else if(cline.indexOf("msje")!= -1){
+                                        cline= in.readLine();
+                                        cline= in.readLine();
+                                        mensaje=cline;
+                                    }/*
+                                    else if(cline.indexOf("ip2")!=-1){
                                         cline= in.readLine();//PARA SALTAR INFO INNECESARIA
-                                    cline= in.readLine();//PARA SALTAR INFO INNECESARIA
-                                    ip=cline;
+                                        cline= in.readLine();//PARA SALTAR INFO INNECESARIA
+                                        ip=cline;
                                     }
-                                    else if(cline.indexOf("msje")!= -1){//REVISA SI TIENE EL NAME=PUERTO PUESTO EN EL FORM DEL HTML
-                                    cline= in.readLine();//PARA SALTAR INFO INNECESARIA
-                                    cline= in.readLine();//PARA SALTAR INFO INNECESARIA
-                                    mensaje=cline;
-                                    }
+                                    else if(cline.indexOf("arch")!=-1){
+                                        cline= in.readLine();//PARA SALTAR INFO INNECESARIA
+                                        cline= in.readLine();//PARA SALTAR INFO INNECESARIA
+                                        path=cline;
+                                    }*/
                                 }
+                                
+                                
                             }
                         }catch(Exception e){
 
@@ -126,7 +140,10 @@ public class Server {
                         try{
                             Socket scliente = new Socket("localhost",5000);
                             DataOutputStream salida = new DataOutputStream(scliente.getOutputStream());
-                            salida.writeBytes("enviar" + " " + user + " " + ip + " " + mensaje + '\n');
+                            if(user!=null&&ip!=null&&mensaje!=null)
+                                salida.writeBytes("enviar" + " " + user + " " + ip + " " + mensaje + '\n');
+                           /* else if(ip!=null&&path!=null)
+                                salida.writeBytes("archivo "+ip + " "+path+'\n');*/
                             scliente.close();
                         }
                         catch(Exception e){
