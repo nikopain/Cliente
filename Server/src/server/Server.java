@@ -13,7 +13,7 @@ public class Server {
     /**
      * @param args the command line arguments
      */
-    private static int port= 4000;
+    private static int port= 4020;
     public static int i =0;
     public static void main(String[] args) throws IOException {
         try{
